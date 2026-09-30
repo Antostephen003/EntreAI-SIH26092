@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntreAI — Channel Finance & Market-Readiness OS</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --ink:#0f172a;
+  --ink-soft:#475569;
+  --paper:#f5f7f9;
+  --surface:#ffffff;7
+  --line:#e2e8f0;
+  --teal:#0d9488;
+  --teal-deep:#0b6e64;
+  --teal-tint:#e6f5f3;
+  --amber:#b45309;
+  --amber-tint:#fdf1e2;
+  --sky:#2563eb;
+  --sky-tint:#eaf1fd;
+  --green:#15803d;
+  --green-tint:#e7f6ec;
+  --red:#b91c1c;
+  --red-tint:#fbeaea;
+  --gray-tint:#eef1f4;
+
+  /* legacy names kept so older markup still resolves */
+  --navy:var(--ink);
+  --royal:var(--teal);
+  --violet:var(--teal-deep);
+  --gold:var(--amber);
+  --gold2:var(--amber);
+  --text:var(--ink);
+  --muted:var(--ink-soft);
+  --blue:var(--sky);
+  --orange:var(--amber);
+  --shadow:0 1px 2px rgba(15,23,42,.04);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Inter',Arial,sans-serif;
+  font-size:14.5px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+}
+
+button,input,select,textarea{font:inherit}
+
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  width:264px;
+  position:fixed;
+  inset:0 auto 0 0;
+  padding:22px 14px;
+  color:var(--ink);
+  background:var(--surface);
+  border-right:1px solid var(--line);
+  overflow-y:auto;
+  z-index:20;
+}
+
+.brand{
+  padding:6px 10px 20px;
+  border-bottom:1px solid var(--line);
+}
+
+.brand-name{
+  font-family:'Inter',sans-serif;
+  font-weight:800;
+  font-size:22px;
+  letter-spacing:-.02em;
+  color:var(--ink);
+}
+
+.brand-name span{color:var(--teal)}
+
+.brand-sub{
+  color:var(--ink-soft);
+  font-size:11px;
+  line-height:1.5;
+  margin-top:5px;
+}
+
+.menu-title{
+  color:#94a3b8;
+  font-size:11px;
+  margin:20px 10px 7px;
+}
+
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px 12px;
+  border-radius:8px;
+  margin:2px 0;
+  cursor:pointer;
+  color:var(--ink-soft);
+  font-size:13px;
+  font-weight:500;
+  transition:.15s;
+  border-left:3px solid transparent;
+}
+
+.nav-item:hover{
+  background:var(--gray-tint);
+  color:var(--ink);
+}
+
+.nav-item.active{
+  color:var(--teal-deep);
+  background:var(--teal-tint);
+  border-left-color:var(--teal);
+  font-weight:700;
+}
+
+.nav-icon{width:20px;text-align:center;color:#94a3b8;font-weight:700;font-size:11px}
+.nav-item.active .nav-icon{color:var(--teal)}
+
+.demo-badge{
+  margin:20px 4px 4px;
+  padding:12px;
+  border-radius:10px;
+  background:var(--gray-tint);
+  border:1px solid var(--line);
+  font-size:11px;
+  color:var(--ink-soft);
+  line-height:1.5;
+}
+
+/* MAIN */
+.main{
+  margin-left:264px;
+  width:calc(100% - 264px);
+  padding:22px 30px 50px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 4px 18px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:22px;
+}
+
+.top-title{
+  font-family:'Inter',sans-serif;
+  font-weight:800;
+  font-size:20px;
+  letter-spacing:-.01em;
+  color:var(--ink);
+}
+
+.top-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.role-switch{
+  display:flex;
+  background:var(--gray-tint);
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:3px;
+  gap:2px;
+}
+.role-switch-btn{
+  border:0;
+  background:transparent;
+  color:var(--ink-soft);
+  font-weight:600;
+  font-size:12px;
+  padding:7px 13px;
+  border-radius:7px;
+  cursor:pointer;
+  transition:.15s;
+}
+.role-switch-btn.active{
+  background:var(--teal);
+  color:#fff;
+}
+.btn-outline{
+  background:transparent;
+  color:var(--red);
+  border:1.5px solid #f2c8c8;
+}
+.btn-outline:hover{background:var(--red-tint)}
+
+.demo-user{
+  background:var(--teal-tint);
+  color:var(--teal-deep);
+  border:1px solid #bfe6e1;
+  padding:8px 13px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.page{display:none}
+.page.active{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.page-title{margin-bottom:20px}
+.eyebrow{
+  color:var(--teal-deep);
+  font-size:12px;
+  font-weight:700;
+}
+.page-title h1{
+  font-family:'Inter',sans-serif;
+  font-weight:800;
+  font-size:26px;
+  letter-spacing:-.015em;
+  margin-top:3px;
+  color:var(--ink);
+}
+.page-title p{color:var(--ink-soft);font-size:13px;margin-top:5px}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.card,.table-card,.form-card,.hero-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+
+.card{padding:18px}
+.table-card,.form-card{padding:20px;margin-bottom:16px}
+
+.hero-card{
+  padding:26px;
+  color:#fff;
+  background:linear-gradient(120deg,var(--ink) 0%,var(--teal-deep) 100%);
+  border:1px solid var(--teal-deep);
+  margin-bottom:16px;
+}
+
+.hero-card h2{font-family:'Inter',sans-serif;font-weight:800;font-size:25px;letter-spacing:-.01em}
+.hero-card p{color:#cfe4e1;max-width:780px;line-height:1.65;margin:8px 0 18px}
+
+.kpi-label{color:var(--ink-soft);font-size:12px}
+.kpi{font-size:26px;font-weight:800;margin-top:6px;color:var(--ink);letter-spacing:-.01em}
+.small-kpi{font-size:18px!important}
+.blue{color:var(--sky)} .green{color:var(--green)}
+.orange{color:var(--amber)} .red{color:var(--red)}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.card-head h3{font-size:15px;font-weight:700;color:var(--ink)}
+.card-head span{font-size:12px;color:var(--ink-soft)}
+
+/* BUTTONS */
+.btn{
+  border:0;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:12.5px;
+  transition:.15s;
+}
+.btn:hover{filter:brightness(.97)}
+.btn-primary{
+  color:#fff;
+  background:var(--teal);
+}
+.btn-primary:hover{background:var(--teal-deep);filter:none}
+.btn-gold{
+  color:#fff;
+  background:var(--amber);
+}
+.btn-gold:hover{filter:brightness(.92)}
+.btn-light{background:var(--gray-tint);color:var(--ink)}
+.btn-light:hover{background:#e5e9ee}
+.btn-green{background:var(--green-tint);color:var(--green)}
+.btn-red{background:var(--red-tint);color:var(--red)}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.form-group label{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+}
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:10px 12px;
+  background:#fff;
+  outline:none;
+  color:var(--ink);
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(13,148,136,.12);
+}
+textarea{min-height:90px;resize:vertical}
+.full{grid-column:1/-1}
+
+.manual-box{
+  display:none;
+  margin-top:15px;
+  padding:16px;
+  border-radius:10px;
+  background:var(--amber-tint);
+  border:1px dashed var(--amber);
+}
+.manual-box.show{display:block}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th,td{
+  padding:12px 9px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  font-size:12.5px;
+}
+th{
+  color:var(--ink-soft);
+  font-weight:600;
+  font-size:11.5px;
+}
+tr:hover td{background:var(--paper)}
+
+.status{
+  display:inline-flex;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:700;
+}
+.status-green{background:var(--green-tint);color:var(--green)}
+.status-red{background:var(--red-tint);color:var(--red)}
+.status-orange{background:var(--amber-tint);color:var(--amber)}
+.status-blue{background:var(--sky-tint);color:var(--sky)}
+.status-gray{background:var(--gray-tint);color:var(--ink-soft)}
+
+/* PIPELINE */
+.pipeline{display:flex;align-items:flex-start;margin:22px 0 8px}
+.step{flex:1;text-align:center;position:relative}
+.step:not(:last-child)::after{
+  content:"";
+  position:absolute;
+  height:2px;
+  background:var(--line);
+  top:17px;
+  left:50%;
+  width:100%;
+  z-index:0;
+}
+.step.done:not(:last-child)::after{background:var(--teal)}
+.circle{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--gray-tint);
+  color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;
+  margin:auto;position:relative;z-index:2;
+  font-size:12px;font-weight:700;
+}
+.step.done .circle{background:var(--teal);color:#fff}
+.step.current .circle{background:var(--ink);color:#fff;box-shadow:0 0 0 4px var(--teal-tint)}
+.step-name{font-size:10.5px;font-weight:600;margin-top:8px;color:var(--ink-soft)}
+
+/* SCORE */
+.score-box{
+  padding:22px;
+  text-align:center;
+  background:var(--teal-tint);
+  border:1px solid #bfe6e1;
+  border-radius:12px;
+}
+.score{font-size:44px;font-weight:800;color:var(--teal-deep);letter-spacing:-.02em}
+
+/* ALERTS */
+.alert{
+  padding:12px 15px;
+  border-radius:9px;
+  margin:10px 0;
+  font-size:12.5px;
+  line-height:1.55;
+}
+.alert-info{background:var(--sky-tint);color:#1e4b8f}
+.alert-warning{background:var(--amber-tint);color:#8a4a08}
+.alert-danger{background:var(--red-tint);color:#8f1c1c}
+.alert-success{background:var(--green-tint);color:#0f5c2c}
+
+/* FEATURE TILE */
+.feature{
+  cursor:pointer;
+  transition:.15s;
+}
+.feature:hover{border-color:var(--teal);box-shadow:0 4px 14px rgba(13,148,136,.12)}
+.feature-icon{font-size:20px;margin-bottom:9px;color:var(--teal)}
+.feature h3{font-size:14px;font-weight:700;color:var(--ink)}
+.feature p{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-top:5px}
+
+/* MARKET */
+.market-map{
+  height:280px;
+  position:relative;
+  overflow:hidden;
+  border-radius:12px;
+  background:var(--paper);
+  border:1px solid var(--line);
+}
+.road,.road2{
+  position:absolute;background:#fff;border:1px solid var(--line);
+  height:14px;width:115%;
+}
+.road{top:45%;transform:rotate(12deg)}
+.road2{top:58%;transform:rotate(-25deg)}
+.pin{position:absolute;font-size:24px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.15))}
+
+/* CHECK LIST */
+.check{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.check:last-child{border-bottom:0}
+.check-left{display:flex;gap:10px;align-items:center}
+.check-icon{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--gray-tint);
+  color:var(--ink-soft);
+  font-size:13px;
+}
+
+/* ROLE VISIBILITY */
+.hidden{display:none!important}
+.customer-only,.admin-only{display:none}
+body.role-customer .customer-only{display:flex}
+body.role-customer div.customer-only{display:block}
+body.role-customer .nav-item.customer-only{display:flex}
+body.role-admin .admin-only{display:flex}
+body.role-admin div.admin-only{display:block}
+body.role-admin .nav-item.admin-only{display:flex}
+body.role-customer .admin-only{display:none!important}
+body.role-admin .customer-only{display:none!important}
+.grid-3.customer-only,.grid-3.admin-only{display:none;grid-template-columns:repeat(3,1fr);gap:14px}
+body.role-customer .grid-3.customer-only{display:grid}
+body.role-admin .grid-3.admin-only{display:grid}
+.btn-row.customer-only,.btn-row.admin-only{display:none;gap:9px;flex-wrap:wrap;margin-top:14px}
+body.role-customer .btn-row.customer-only{display:flex}
+body.role-admin .btn-row.admin-only{display:flex}
+
+/* LOGIN SCREEN */
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px 16px;
+  background:var(--ink);
+}
+.login-box{
+  width:100%;
+  max-width:540px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+  padding:32px 32px 24px;
+}
+.login-brand{text-align:center;margin-bottom:4px}
+.login-brand .brand-name{color:var(--ink);font-size:26px}
+.login-brand .brand-sub{color:var(--ink-soft);margin-top:4px}
+.login-tag{
+  text-align:center;
+  color:var(--ink-soft);
+  font-size:12.5px;
+  margin:14px 0 18px;
+}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px}
+.role-card{
+  cursor:pointer;
+  padding:18px 16px;
+  border-radius:12px;
+  border:1.5px solid var(--line);
+  background:var(--paper);
+  transition:.15s;
+  text-align:center;
+}
+.role-card:hover{border-color:var(--teal)}
+.role-card.selected{
+  border-color:var(--teal);
+  background:var(--teal-tint);
+}
+.role-icon{font-size:26px;margin-bottom:8px}
+.role-card h3{font-size:14px;font-weight:700;margin-bottom:5px;color:var(--ink)}
+.role-card p{font-size:11.5px;color:var(--ink-soft);line-height:1.5}
+.login-fields{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.login-btn{width:100%;margin-top:16px;padding:13px;font-size:13px}
+.login-btn:disabled{opacity:.5;cursor:not-allowed}
+.login-note{margin-top:16px;text-align:center;background:var(--amber-tint);border:1px solid #f0dcb8;color:#8a5a1c}
+@media(max-width:560px){
+  .role-grid,.login-fields{grid-template-columns:1fr}
+}
+
+/* MOBILE */
+@media(max-width:1050px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:800px){
+  .sidebar{width:220px}
+  .main{margin-left:220px;width:calc(100% - 220px);padding:18px}
+  .form-grid,.grid-2{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .sidebar{position:relative;width:100%;height:auto}
+  .main{margin-left:0;width:100%}
+  .app{display:block}
+  .grid,.grid-3{grid-template-columns:1fr}
+  .topbar{gap:10px;align-items:flex-start;flex-direction:column}
+}
+
+/* LANGUAGE SWITCHER */
+.lang-switch{
+  display:flex;
+  background:var(--gray-tint);
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:3px;
+  gap:2px;
+  flex-wrap:wrap;
+}
+.lang-btn{
+  border:0;
+  background:transparent;
+  color:var(--ink-soft);
+  font-weight:600;
+  font-size:11px;
+  padding:6px 10px;
+  border-radius:7px;
+  cursor:pointer;
+  transition:.15s;
+}
+.lang-btn.active{
+  background:var(--teal);
+  color:#fff;
+}
+.login-lang{
+  display:flex;
+  justify-content:center;
+  margin-bottom:14px;
+}
+.login-lang .lang-switch{margin:0 auto}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="brand-name">Entre<span style="color:var(--gold)">AI</span></div>
+      <div class="brand-sub"><span data-i18n="brand_sub">Channel Finance & Market-Readiness OS for NSFDC Concessional Credit</span></div>
+    </div>
+    
+    <div class="login-lang">
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" data-lang="hi" onclick="setLanguage('hi')">हिन्दी</button>
+        <button class="lang-btn" data-lang="ta" onclick="setLanguage('ta')">தமிழ்</button>
+        <button class="lang-btn" data-lang="ml" onclick="setLanguage('ml')">മലയാളം</button>
+      </div>
+    </div>
+
+    <p class="login-tag" data-i18n="login_tag">Choose how you'd like to sign in</p>
+
+    <div class="role-grid">
+      <div class="role-card" id="roleCustomerCard" onclick="selectRole('customer',this)">
+        <div class="role-icon">👤</div>
+        <h3 data-i18n="customer_login">Customer Login</h3>
+        <p data-i18n="customer_desc">Applicant / Citizen — apply for NSFDC credit, check document readiness, and track your application.</p>
+      </div>
+      <div class="role-card" id="roleAdminCard" onclick="selectRole('admin',this)">
+        <div class="role-icon">🏦</div>
+        <h3 data-i18n="admin_login">Admin Login</h3>
+        <p data-i18n="admin_desc">CSC Operator / Channel Partner / NSFDC Admin — route, appraise, and manage applications.</p>
+      </div>
+    </div>
+
+    <div class="login-fields" id="customerFields" style="display:none">
+      <div class="form-group"><label data-i18n="mobile_label">Mobile Number / Applicant ID</label><input id="custId" placeholder="e.g. 98xxxxxxxx" value="9876543210"></div>
+      <div class="form-group"><label data-i18n="otp_label">OTP</label><input id="custPass" type="password" placeholder="Enter OTP" value="123456"></div>
+      <div class="form-group" style="grid-column:1/-1"><label data-i18n="email_label">Email ID (optional)</label><input id="custEmail" type="email" placeholder="e.g. name@email.com" value="ravi.kumar@email.com"></div>
+    </div>
+
+    <div class="login-fields" id="adminFields" style="display:none">
+      <div class="form-group"><label data-i18n="emp_id_label">Employee / Partner ID</label><input id="adminId" placeholder="e.g. CSC-102" value="CSC-102"></div>
+      <div class="form-group"><label data-i18n="password_label">Password</label><input id="adminPass" type="password" placeholder="Enter password" value="admin123"></div>
+    </div>
+
+    <button class="btn btn-gold login-btn" id="loginBtn" onclick="doLogin()" disabled data-i18n="login_btn_select">Select a login type to continue</button>
+    <div id="loginMessage"></div>
+
+    <div class="alert login-note"><span data-i18n="demo_note">SIH Prototype Mode — any credentials work in this demo build.</span></div>
+  </div>
+</div>
+
+<div class="app hidden" id="appShell">
+
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="brand-name">Entre<span>AI</span></div>
+    <div class="brand-sub">
+      Channel Finance & Market-Readiness OS<br>
+      for NSFDC Concessional Credit
+    </div>
+  </div>
+
+  <div class="menu-title" data-i18n="menu_overview">Overview</div>
+
+  <div class="nav-item active" onclick="showPage('dashboard',this)">
+    <span class="nav-icon">⌂</span> <span data-i18n="nav_dashboard">Dashboard</span>
+  </div>
+
+  <div class="menu-title customer-only" data-i18n="menu_apply">Apply for Credit</div>
+
+  <div class="nav-item customer-only" onclick="showPage('intake',this)">
+    <span class="nav-icon">01</span> <span data-i18n="nav_intake">Intake</span>
+  </div>
+
+  <div class="nav-item customer-only" onclick="showPage('profile',this)">
+    <span class="nav-icon">02</span> <span data-i18n="nav_profile">Profile</span>
+  </div>
+
+  <div class="nav-item customer-only" onclick="showPage('readiness',this)">
+    <span class="nav-icon">03</span> <span data-i18n="nav_readiness">Document Readiness</span>
+  </div>
+
+  <div class="nav-item customer-only" onclick="showPage('match',this)">
+    <span class="nav-icon">04</span> <span data-i18n="nav_match">Match & Calculate</span>
+  </div>
+
+  <div class="nav-item customer-only" onclick="showPage('emi',this)">
+    <span class="nav-icon">05</span> <span data-i18n="nav_emi">Post-Moratorium EMI</span>
+  </div>
+
+  <div class="nav-item customer-only" onclick="showPage('market',this)">
+    <span class="nav-icon">06</span> <span data-i18n="nav_market">Market Saturation Signal</span>
+  </div>
+
+  <div class="menu-title" data-i18n="menu_status">Application Status</div>
+
+  <div class="nav-item" onclick="showPage('tracking',this)">
+    <span class="nav-icon">07</span> <span data-i18n="nav_tracking">SLA Tracker</span>
+  </div>
+
+  <div class="menu-title admin-only" data-i18n="menu_routing">Routing & Channel Partner</div>
+
+  <div class="nav-item admin-only" onclick="showPage('routing',this)">
+    <span class="nav-icon">08</span> <span data-i18n="nav_routing">CPRS Routing</span>
+  </div>
+
+  <div class="nav-item admin-only" onclick="showPage('partner',this)">
+    <span class="nav-icon">09</span> <span data-i18n="nav_partner">Partner Portal</span>
+  </div>
+
+  <div class="nav-item admin-only" onclick="showPage('reports',this)">
+    <span class="nav-icon">10</span> <span data-i18n="nav_reports">Reporting</span>
+  </div>
+
+  <div class="nav-item admin-only" onclick="showPage('alerts',this)">
+    <span class="nav-icon">11</span> <span data-i18n="nav_alerts">Auto Alerts</span>
+  </div>
+
+  <div class="demo-badge">
+    <b>SIH Prototype Mode</b><br>
+    Golden Path • Fallback Testing • Pre-seeded Partner Data
+  </div>
+
+</aside>
+
+<main class="main">
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Smart Automation • SIH26092</div>
+      <div class="top-title" id="pageHeading">EntreAI Dashboard</div>
+    </div>
+    <div class="top-right">
+      
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="hi" onclick="setLanguage('hi')">HI</button>
+        <button class="lang-btn" data-lang="ta" onclick="setLanguage('ta')">TA</button>
+        <button class="lang-btn" data-lang="ml" onclick="setLanguage('ml')">ML</button>
+      </div>
+
+      <div class="role-switch">
+        <button class="role-switch-btn" data-role="customer" onclick="switchRole('customer')"><span data-i18n="role_customer">Customer View</span></button>
+        <button class="role-switch-btn" data-role="admin" onclick="switchRole('admin')"><span data-i18n="role_admin">Admin View</span></button>
+      </div>
+      <button class="btn btn-light customer-only" onclick="showPage('intake')"><span data-i18n="btn_new_app">+ New Application</span></button>
+      <button class="btn btn-light admin-only" onclick="showPage('partner')"><span data-i18n="btn_partner_queue">Partner Queue</span></button>
+      <div class="demo-user" id="roleBadge">Demo</div>
+      <button class="btn btn-outline" onclick="logout()"><span data-i18n="btn_logout">Exit / Log Out</span></button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="page active">
+
+    <div class="hero-card">
+      <div class="eyebrow" style="color:#a8e0d8">ENTREAI</div>
+      <h2 data-i18n="hero_title">From Scheme Discovery to Reliable Partner Routing</h2>
+      <p>
+        <span data-i18n="hero_desc">A two-sided Channel Finance Operating System between SC applicants
+        and NSFDC's Channel Partners — with Document Readiness, Smart Scheme
+        Recommendation, CPRS Routing, Market Saturation Signal and SLA Tracking.</span>
+      </p>
+      <div class="btn-row customer-only">
+        <button class="btn btn-gold" onclick="showPage('intake')"><span data-i18n="btn_apply">Apply for NSFDC Credit</span></button>
+        <button class="btn btn-light" onclick="showPage('tracking')"><span data-i18n="btn_track">Track My Application</span></button>
+      </div>
+      <div class="btn-row admin-only">
+        <button class="btn btn-gold" onclick="showPage('routing')"><span data-i18n="btn_cprs">Open CPRS Routing</span></button>
+        <button class="btn btn-light" onclick="showPage('partner')">Partner Portal</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="kpi-label">Applications</div>
+        <div class="kpi blue">127</div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">NOMINATED</div>
+        <div class="kpi">31</div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">SANCTIONED</div>
+        <div class="kpi green">64</div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">DISBURSED</div>
+        <div class="kpi orange">42</div>
+      </div>
+    </div>
+
+    <div class="grid-3 customer-only">
+      <div class="card feature" onclick="showPage('readiness')">
+        <div class="feature-icon">▣</div>
+        <h3>Document Readiness</h3>
+        <p>DRS pipeline with DigiLocker / Setu Sandbox and manual / CSC fallback.</p>
+      </div>
+      <div class="card feature" onclick="showPage('match')">
+        <div class="feature-icon">◇</div>
+        <h3>Smart Scheme Recommender</h3>
+        <p>Rule-based recommendation for MFS, Term Loan and Educational Loan.</p>
+      </div>
+      <div class="card feature" onclick="showPage('market')">
+        <div class="feature-icon">⌖</div>
+        <h3>Market Saturation Signal</h3>
+        <p>Udyam/MSME data + OpenStreetMap business density.</p>
+      </div>
+    </div>
+
+    <div class="grid-3 admin-only">
+      <div class="card feature" onclick="showPage('routing')">
+        <div class="feature-icon">⇄</div>
+        <h3>CPRS Routing</h3>
+        <p>Liquidity-aware routing across seeded Channel Partners, overdue/quota filtered.</p>
+      </div>
+      <div class="card feature" onclick="showPage('partner')">
+        <div class="feature-icon">▤</div>
+        <h3>Partner Portal</h3>
+        <p>Application queue, appraisal-ready leads and manual status updates.</p>
+      </div>
+      <div class="card feature" onclick="showPage('reports')">
+        <div class="feature-icon">▦</div>
+        <h3>Reporting & Analytics</h3>
+        <p>Sanction rate, SLA compliance and scheme-wise distribution.</p>
+      </div>
+    </div>
+
+    <div class="card customer-only">
+      <div class="card-head">
+        <h3>Your Application Pipeline</h3>
+        <span>Intake → Readiness → Match & Calculate → Route → Track</span>
+      </div>
+
+      <div class="pipeline">
+        <div class="step done"><div class="circle">✓</div><div class="step-name">INTAKE</div></div>
+        <div class="step done"><div class="circle">✓</div><div class="step-name">READINESS</div></div>
+        <div class="step current"><div class="circle">3</div><div class="step-name">MATCH & CALCULATE</div></div>
+        <div class="step"><div class="circle">4</div><div class="step-name">ROUTE</div></div>
+        <div class="step"><div class="circle">5</div><div class="step-name">TRACK</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- INTAKE -->
+  <section id="intake" class="page">
+    <div class="page-title">
+      <div class="eyebrow">01 • Intake</div>
+      <h1 data-i18n="title_intake">Applicant Intake</h1>
+      <p>Low-bandwidth PWA / CSC / Bank-Mitra-assisted flow</p>
+    </div>
+
+    <div class="form-card">
+      <div class="card-head">
+        <h3>Applicant Profile Capture</h3>
+        <span>Required fields marked for prototype</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label data-i18n="applicant_name">Applicant Name</label>
+          <input id="applicantName" value="Ravi Kumar">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="email_label_req">Email ID</label>
+          <input id="applicantEmail" type="email" value="ravi.kumar@email.com" placeholder="name@email.com">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="annual_income">Annual Income</label>
+          <input id="income" type="number" value="350000">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="category">Category</label>
+          <select id="category">
+            <option>Scheduled Caste (SC)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="project_type">Project Type</label>
+          <select id="projectType">
+            <option>Grocery Business</option>
+            <option>Small Trade</option>
+            <option>Service Business</option>
+            <option>Education</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="project_cost">Project Cost</label>
+          <input id="projectCost" type="number" value="250000">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="loan_req">Loan Requirement</label>
+          <input id="loanAmount" type="number" value="225000">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="app_mode">Application Mode</label>
+          <select>
+            <option>Applicant / Citizen</option>
+            <option>CSC Operator</option>
+            <option>Bank-Mitra</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="district">District / Location</label>
+          <input value="Pilot District">
+        </div>
+
+        <div class="form-group full">
+          <label data-i18n="purpose">Purpose / Project Need</label>
+          <textarea>Setting up a grocery business</textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="captureProfile()"><span data-i18n="btn_capture">Capture Applicant Profile</span></button>
+        <button class="btn btn-light" onclick="clearIntake()"><span data-i18n="btn_clear">Clear</span></button>
+        <button class="btn btn-gold" onclick="showPage('readiness')"><span data-i18n="btn_continue_readiness">Continue → Document Readiness</span></button>
+      </div>
+
+      <div id="intakeMessage"></div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile" class="page">
+    <div class="page-title">
+      <div class="eyebrow">02 • Profile</div>
+      <h1 data-i18n="title_profile">Applicant Profile</h1>
+      <p>Income, category and project needs</p>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="kpi-label">Applicant</div><div class="kpi small-kpi">Ravi Kumar</div></div>
+      <div class="card"><div class="kpi-label">Category</div><div class="kpi small-kpi">SC</div></div>
+      <div class="card"><div class="kpi-label">Annual Income</div><div class="kpi small-kpi">₹3.50 Lakh</div></div>
+      <div class="card"><div class="kpi-label">Project Cost</div><div class="kpi small-kpi">₹2.50 Lakh</div></div>
+    </div>
+
+    <div class="form-card">
+      <div class="card-head">
+        <h3>Profile Details</h3>
+        <button class="btn btn-light" onclick="toggleManual('profileManual')">Edit / Manual Entry</button>
+      </div>
+
+      <div class="manual-box" id="profileManual">
+        <div class="form-grid">
+          <div class="form-group"><label>Applicant Name</label><input value="Ravi Kumar"></div>
+          <div class="form-group"><label>Annual Income</label><input value="350000"></div>
+          <div class="form-group"><label data-i18n="category">Category</label><input value="Scheduled Caste (SC)"></div>
+          <div class="form-group"><label data-i18n="project_type">Project Type</label><input value="Grocery Business"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="saveManual('profileManual')">Save Manual Entry</button></div>
+      </div>
+
+      <table>
+        <tr><td>Project Type</td><td><b>Grocery Business</b></td></tr>
+        <tr><td>Loan Requirement</td><td><b>₹2,25,000</b></td></tr>
+        <tr><td>Location</td><td><b>Pilot District</b></td></tr>
+        <tr><td>Application Mode</td><td><b>CSC-assisted mode</b></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- READINESS -->
+  <section id="readiness" class="page">
+    <div class="page-title">
+      <div class="eyebrow">03 • Check</div>
+      <h1 data-i18n="title_readiness">Document Readiness</h1>
+      <p>DRS Engine — readiness heuristic, not legal validation</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="score-box">
+        <div>Document Readiness Score</div>
+        <div class="score" id="drsScore">85%</div>
+        <p style="color:var(--muted);font-size:12px">Pre-submission readiness check</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Verification Gateway</h3><span><span data-i18n="btn_digilocker">DigiLocker / Setu Sandbox</span></span></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="verifyDocuments()"><span data-i18n="btn_digilocker">DigiLocker / Setu Sandbox</span></button>
+          <button class="btn btn-gold" onclick="toggleManual('documentManual')"><span data-i18n="btn_manual">Manual Entry</span></button>
+        </div>
+        <div class="manual-box" id="documentManual">
+          <div class="form-grid">
+            <div class="form-group"><label>Identity Status</label><select><option>Verified</option><option>Needs Review</option></select></div>
+            <div class="form-group"><label>Caste Certificate</label><select><option>Verified</option><option>Needs Review</option></select></div>
+            <div class="form-group"><label>Income Certificate</label><select><option>Verified</option><option>Needs Review</option></select></div>
+            <div class="form-group"><label>Bank Linkage</label><select><option>Verified</option><option>Needs Review</option></select></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="manualDocumentEntry()"><span data-i18n="btn_save_manual">Save Manual Verification</span></button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-head">
+        <h3>DRS Pipeline</h3>
+        <span>Pre-submission document consistency check</span>
+      </div>
+
+      <div class="check"><div class="check-left"><div class="check-icon">✓</div><div>Identity</div></div><span class="status status-green">VERIFIED</span></div>
+      <div class="check"><div class="check-left"><div class="check-icon">✓</div><div>Caste Certificate</div></div><span class="status status-green">VERIFIED</span></div>
+      <div class="check"><div class="check-left"><div class="check-icon">✓</div><div>Income Certificate</div></div><span class="status status-green">VERIFIED</span></div>
+      <div class="check"><div class="check-left"><div class="check-icon">✓</div><div>Bank Linkage</div></div><span class="status status-green">VERIFIED</span></div>
+      <div class="check"><div class="check-left"><div class="check-icon">!</div><div>Project Document / OCR</div></div><span class="status status-orange">NEEDS REVIEW</span></div>
+
+      <div id="documentMessage"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-light" onclick="cscFallback()"><span data-i18n="btn_csc">CSC Fallback</span></button>
+        <button class="btn btn-gold" onclick="showPage('match')"><span data-i18n="btn_continue_match">Continue → Match & Calculate</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATCH -->
+  <section id="match" class="page">
+    <div class="page-title">
+      <div class="eyebrow">04 • Match</div>
+      <h1 data-i18n="title_match">Smart Scheme Recommender</h1>
+      <p>Rule-based scheme matching — transparent, deterministic and explainable</p>
+    </div>
+
+    <div class="hero-card">
+      <div class="eyebrow" style="color:#a8e0d8">EXACT SCHEME RECOMMENDATION</div>
+      <h2>Term Loan</h2>
+      <p>Recommended based on project type, project cost, income and applicant profile.</p>
+
+      <div class="grid-3">
+        <div class="card"><div class="kpi-label">Project Cost</div><div class="kpi small-kpi">₹2,50,000</div></div>
+        <div class="card"><div class="kpi-label">Eligible Finance</div><div class="kpi small-kpi">₹2,25,000</div></div>
+        <div class="card"><div class="kpi-label">Interest</div><div class="kpi small-kpi">7% p.a.</div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="showPage('emi')"><span data-i18n="btn_calc_emi">Calculate Post-Moratorium EMI →</span></button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-head"><h3>NSFDC Credit Products</h3><span>Scheme matching result</span></div>
+      <table>
+        <tr><th>Product</th><th>Limit / Purpose</th><th>Result</th><th>Action</th></tr>
+        <tr><td>Micro Finance Scheme (MFS)</td><td>≤ ₹1.40 lakh</td><td><span class="status status-orange">ALTERNATIVE</span></td><td><button class="btn btn-light" onclick="showPage('emi')">View</button></td></tr>
+        <tr><td>Term Loan</td><td>≤ ₹50 lakh</td><td><span class="status status-green">RECOMMENDED</span></td><td><button class="btn btn-primary" onclick="showPage('emi')">Select</button></td></tr>
+        <tr><td>Educational Loan</td><td>Education Cost</td><td><span class="status status-gray">NOT APPLICABLE</span></td><td><button class="btn btn-light">View</button></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- EMI -->
+  <section id="emi" class="page">
+    <div class="page-title">
+      <div class="eyebrow">05 • Calculate</div>
+      <h1 data-i18n="title_emi">Post-Moratorium EMI</h1>
+      <p>True post-moratorium EMI visualizer</p>
+    </div>
+
+    <div class="form-card">
+      <div class="form-grid">
+        <div class="form-group"><label>Sanctioned Loan Amount (P)</label><input id="emiPrincipal" type="number" value="225000"></div>
+        <div class="form-group"><label>Concessional Interest Rate (%)</label><input id="emiRate" type="number" value="7"></div>
+        <div class="form-group"><label>Moratorium Period (Months)</label><input id="moratorium" type="number" value="6"></div>
+        <div class="form-group"><label>Total Tenure (Months)</label><input id="tenure" type="number" value="48"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="calculateEMI()"><span data-i18n="btn_calculate_emi">Calculate Post-Moratorium EMI</span></button>
+        <button class="btn btn-light" onclick="resetEMI()"><span data-i18n="btn_reset">Reset</span></button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="kpi-label">New Principal</div><div class="kpi blue" id="newPrincipal">₹0</div></div>
+      <div class="card"><div class="kpi-label">Monthly EMI</div><div class="kpi green" id="monthlyEMI">₹0</div></div>
+      <div class="card"><div class="kpi-label">Moratorium</div><div class="kpi orange" id="displayMoratorium">0 Months</div></div>
+      <div class="card"><div class="kpi-label">Remaining Tenure</div><div class="kpi" id="remainingTenure">0 Months</div></div>
+    </div>
+
+    <div class="alert alert-info">
+      <b>Formula:</b> New_Principal = P + (P × r × t_moratorium). EMI is computed on New_Principal and amortized over the remaining tenure.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="showPage('routing')"><span data-i18n="btn_continue_routing">Continue → CPRS Routing</span></button>
+    </div>
+  </section>
+
+  <!-- ROUTING -->
+  <section id="routing" class="page">
+    <div class="page-title">
+      <div class="eyebrow">06 • Route</div>
+      <h1 data-i18n="title_routing">CPRS Routing</h1>
+      <p>Channel Partner Reliability Score — reliable partner routing</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h3>CPRS Formula</h3><span>Published formula</span></div>
+        <p style="line-height:1.8;font-size:13px">
+          <b>CPRS = 0.4 × Headroom% + 0.3 × (OverdueFlag = 0) + 0.2 × SLA_History_Score + 0.1 × Crowdsourced_Turnaround</b>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Routing Rule</h3><span>Automatic filtering</span></div>
+        <div class="alert alert-success">Overdue partners are auto-suppressed from routing.</div>
+        <div class="alert alert-warning">Quota-exhausted partners are excluded before ranking.</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-head"><h3>Channel Partner Directory</h3><span>Pre-seeded Golden Path data</span></div>
+
+      <table>
+        <tr><th>Channel Partner</th><th>Type</th><th>Fund Headroom</th><th>Overdue</th><th>SLA History</th><th>CPRS</th><th>Routing</th></tr>
+        <tr><td>Partner A</td><td>PSB</td><td>82%</td><td>No</td><td>92%</td><td><b>89.2</b></td><td><span class="status status-green">RECOMMENDED</span></td></tr>
+        <tr><td>Partner B</td><td>RRB</td><td>65%</td><td>No</td><td>86%</td><td><b>75.4</b></td><td><span class="status status-blue">AVAILABLE</span></td></tr>
+        <tr><td>Partner C</td><td>NBFC-MFI</td><td>45%</td><td>Yes</td><td>70%</td><td>—</td><td><span class="status status-red">SUPPRESSED</span></td></tr>
+        <tr><td>Partner D</td><td>SCA</td><td>0%</td><td>No</td><td>88%</td><td>—</td><td><span class="status status-orange">QUOTA-EXHAUSTED</span></td></tr>
+        <tr><td>Partner E</td><td>PSB</td><td>Unknown</td><td>Unknown</td><td>Unknown</td><td>—</td><td><span class="status status-gray">UNVERIFIED</span></td></tr>
+      </table>
+
+      <div class="alert alert-info">
+        <b>Fallback rule:</b> if live utilization / overdue data is unavailable, CPRS defaults to distance-only ranking and visibly marks the partner <b>UNVERIFIED</b>.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="routeApplication()"><span data-i18n="btn_route">Route Application to Partner A</span></button>
+        <button class="btn btn-gold" onclick="showPage('market')"><span data-i18n="btn_continue_market">Continue → Market Saturation Signal</span></button>
+      </div>
+      <div id="routingMessage"></div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section id="market" class="page">
+    <div class="page-title">
+      <div class="eyebrow">07 • Market Readiness</div>
+      <h1 data-i18n="title_market">Market Saturation Signal</h1>
+      <p>Udyam/MSME Data + OpenStreetMap Business Density</p>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="kpi-label">Similar Businesses</div><div class="kpi">42</div></div>
+      <div class="card"><div class="kpi-label">MSME Density</div><div class="kpi orange">HIGH</div></div>
+      <div class="card"><div class="kpi-label">Business Density</div><div class="kpi orange">MEDIUM</div></div>
+      <div class="card"><div class="kpi-label">Signal</div><div class="kpi orange">CAUTION</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Local Business Density — Pilot District</h3><span>Directional cross-check</span></div>
+      <div class="market-map">
+        <div class="road"></div><div class="road2"></div>
+        <div class="pin" style="left:18%;top:22%">🏪</div>
+        <div class="pin" style="left:39%;top:53%">🏪</div>
+        <div class="pin" style="left:66%;top:24%">🏪</div>
+        <div class="pin" style="left:74%;top:65%">🏪</div>
+        <div class="pin" style="left:49%;top:34%">📍</div>
+        <div class="pin" style="left:28%;top:72%">🏪</div>
+      </div>
+      <br>
+      <div class="alert alert-warning"><b>Market Saturation Warning:</b> Existing business supply indicates moderate competition for the proposed business category.</div>
+      <div class="alert alert-info"><b>Disclaimer:</b> This is a saturation warning, not a viability guarantee. Existing business supply does not by itself measure consumer demand or purchasing power.</div>
+      <button class="btn btn-gold" onclick="showPage('tracking')"><span data-i18n="btn_continue_track">Continue → SLA Tracker</span></button>
+    </div>
+  </section>
+
+  <!-- TRACKING -->
+  <section id="tracking" class="page">
+    <div class="page-title">
+      <div class="eyebrow">08 • Track</div>
+      <h1 data-i18n="title_tracking">SLA Tracker</h1>
+      <p>4-stage state machine with automated breach alerts</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Loan Application #ENT-1001</h3><span>Partner A</span></div>
+      <div class="pipeline">
+        <div class="step done"><div class="circle">✓</div><div class="step-name">NOMINATED</div></div>
+        <div class="step current"><div class="circle">2</div><div class="step-name">APPRAISAL</div></div>
+        <div class="step"><div class="circle">3</div><div class="step-name">SANCTIONED</div></div>
+        <div class="step"><div class="circle">4</div><div class="step-name">DISBURSED</div></div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="grid">
+      <div class="card"><div class="kpi-label">Current Stage</div><div class="kpi blue small-kpi">APPRAISAL</div></div>
+      <div class="card"><div class="kpi-label">SLA Status</div><div class="kpi green small-kpi">WITHIN SLA</div></div>
+      <div class="card"><div class="kpi-label">Partner</div><div class="kpi small-kpi">Partner A</div></div>
+      <div class="card"><div class="kpi-label">Application</div><div class="kpi small-kpi">ENT-1001</div></div>
+    </div>
+
+    <div class="alert alert-success">SLA timer active. Automated SMS / Email / Webhook alert will trigger if the stage exceeds the charter limit.</div>
+
+    <div class="btn-row admin-only">
+      <button class="btn btn-primary" onclick="advanceStage()"><span data-i18n="btn_advance">Advance Stage</span></button>
+      <button class="btn btn-red" onclick="triggerBreach()"><span data-i18n="btn_breach">Simulate SLA Breach</span></button>
+    </div>
+    <div id="trackingMessage"></div>
+  </section>
+
+  <!-- PARTNER -->
+  <section id="partner" class="page">
+    <div class="page-title">
+      <div class="eyebrow">09 • Channel Partner</div>
+      <h1 data-i18n="title_partner">Partner Portal</h1>
+      <p>SCA / PSB / RRB / NBFC-MFI</p>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="kpi-label">Applications Received</div><div class="kpi blue">24</div></div>
+      <div class="card"><div class="kpi-label">Under Appraisal</div><div class="kpi">12</div></div>
+      <div class="card"><div class="kpi-label">Sanctioned</div><div class="kpi green">6</div></div>
+      <div class="card"><div class="kpi-label">SLA Breaches</div><div class="kpi red">2</div></div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-head"><h3>Partner Application Queue</h3><button class="btn btn-primary" onclick="toggleManual('partnerManual')"><span data-i18n="btn_manual_update">Manual Update</span></button></div>
+
+      <div class="manual-box" id="partnerManual">
+        <div class="form-grid">
+          <div class="form-group"><label>Application ID</label><input value="ENT-1001"></div>
+          <div class="form-group"><label>Application Status</label><select><option>APPRAISAL</option><option>NOMINATED</option><option>SANCTIONED</option><option>DISBURSED</option></select></div>
+          <div class="form-group"><label>Partner Remarks</label><input placeholder="Enter remarks"></div>
+          <div class="form-group"><label>SLA Status</label><select><option>WITHIN SLA</option><option>BREACHED</option></select></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="saveManual('partnerManual')"><span data-i18n="btn_save_partner">Save Partner Update</span></button></div>
+      </div>
+
+      <table>
+        <tr><th>Application</th><th>Applicant</th><th>Scheme</th><th>Amount</th><th>Status</th></tr>
+        <tr><td>ENT-1001</td><td>Ravi Kumar</td><td>Term Loan</td><td>₹2.25L</td><td><span class="status status-blue">APPRAISAL</span></td></tr>
+        <tr><td>ENT-1002</td><td>Arun Kumar</td><td>MFS</td><td>₹1.20L</td><td><span class="status status-orange">DOCUMENTS</span></td></tr>
+        <tr><td>ENT-1003</td><td>Priya</td><td>Educational Loan</td><td>₹4.50L</td><td><span class="status status-green">SANCTIONED</span></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- REPORTS -->
+  <section id="reports" class="page">
+    <div class="page-title">
+      <div class="eyebrow">10 • Reporting</div>
+      <h1 data-i18n="title_reports">Reporting & Analytics</h1>
+      <p>Channel Finance performance and SLA analytics</p>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="kpi-label">Total Applications</div><div class="kpi">127</div></div>
+      <div class="card"><div class="kpi-label">Sanction Rate</div><div class="kpi green">74%</div></div>
+      <div class="card"><div class="kpi-label">Average Processing Time</div><div class="kpi">4.2 Days</div></div>
+      <div class="card"><div class="kpi-label">SLA Compliance</div><div class="kpi blue">88%</div></div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-head"><h3>Scheme Distribution</h3><span>Demo analytics</span></div>
+      <table>
+        <tr><th>NSFDC Product</th><th>Applications</th><th>Share</th></tr>
+        <tr><td>Micro Finance Scheme (MFS)</td><td>42</td><td>33%</td></tr>
+        <tr><td>Term Loan</td><td>61</td><td>48%</td></tr>
+        <tr><td>Educational Loan</td><td>24</td><td>19%</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ALERTS -->
+  <section id="alerts" class="page">
+    <div class="page-title">
+      <div class="eyebrow">11 • Notifications</div>
+      <h1 data-i18n="title_alerts">Auto Alerts</h1>
+      <p>SMS / Email / Webhook notification centre</p>
+    </div>
+
+    <div class="alert alert-danger"><b>SLA Breach</b><br>Application ENT-1004 exceeded appraisal SLA.</div>
+    <div class="alert alert-warning"><b>Document Issue</b><br>Project document requires additional verification.</div>
+    <div class="alert alert-success"><b>Application Sanctioned</b><br>Application ENT-1001 has been sanctioned.</div>
+    <div class="alert alert-info"><b>Partner Routing</b><br>Application ENT-1001 routed to Partner A.</div>
+
+    <div class="form-card">
+      <div class="card-head"><h3>Manual Alert</h3><span>Demo control</span></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Alert Type</label><select id="alertType"><option>SLA Breach</option><option>Document Issue</option><option>Partner Update</option><option>Application Sanctioned</option></select></div>
+        <div class="form-group"><label>Application ID</label><input id="alertApp" value="ENT-1001"></div>
+        <div class="form-group full"><label>Message</label><textarea id="alertText" placeholder="Enter alert message"></textarea></div>
+      </div>
+      <button class="btn btn-primary" onclick="createAlert()"><span data-i18n="btn_create_alert">Create Auto Alert</span></button>
+      <div id="newAlert"></div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+
+/* ========== MULTILINGUAL SUPPORT ========== */
+const translations = {
+  en: {
+    login_tag: "Choose how you'd like to sign in",
+    customer_login: "Customer Login",
+    admin_login: "Admin Login",
+    customer_desc: "Applicant / Citizen — apply for NSFDC credit, check document readiness, and track your application.",
+    admin_desc: "CSC Operator / Channel Partner / NSFDC Admin — route, appraise, and manage applications.",
+    mobile_label: "Mobile Number / Applicant ID",
+    otp_label: "OTP",
+    email_label: "Email ID (optional)",
+    email_label_req: "Email ID",
+    emp_id_label: "Employee / Partner ID",
+    password_label: "Password",
+    login_btn_select: "Select a login type to continue",
+    login_btn_customer: "Login as Customer",
+    login_btn_admin: "Login as Admin",
+    demo_note: "SIH Prototype Mode — any credentials work in this demo build.",
+    brand_sub: "Channel Finance & Market-Readiness OS for NSFDC Concessional Credit",
+    nav_dashboard: "Dashboard",
+    nav_intake: "Intake",
+    nav_profile: "Profile",
+    nav_readiness: "Document Readiness",
+    nav_match: "Match & Calculate",
+    nav_emi: "Post-Moratorium EMI",
+    nav_market: "Market Saturation Signal",
+    nav_tracking: "SLA Tracker",
+    nav_routing: "CPRS Routing",
+    nav_partner: "Partner Portal",
+    nav_reports: "Reporting",
+    nav_alerts: "Auto Alerts",
+    menu_overview: "Overview",
+    menu_apply: "Apply for Credit",
+    menu_status: "Application Status",
+    menu_routing: "Routing & Channel Partner",
+    btn_new_app: "+ New Application",
+    btn_partner_queue: "Partner Queue",
+    btn_logout: "Exit / Log Out",
+    role_customer: "Customer View",
+    role_admin: "Admin View",
+    btn_apply: "Apply for NSFDC Credit",
+    btn_track: "Track My Application",
+    btn_cprs: "Open CPRS Routing",
+    hero_title: "From Scheme Discovery to Reliable Partner Routing",
+    hero_desc: "A two-sided Channel Finance Operating System between SC applicants and NSFDC's Channel Partners — with Document Readiness, Smart Scheme Recommendation, CPRS Routing, Market Saturation Signal and SLA Tracking.",
+    title_intake: "Applicant Intake",
+    title_profile: "Applicant Profile",
+    title_readiness: "Document Readiness",
+    title_match: "Smart Scheme Recommender",
+    title_emi: "Post-Moratorium EMI",
+    title_routing: "CPRS Routing",
+    title_market: "Market Saturation Signal",
+    title_tracking: "SLA Tracker",
+    title_partner: "Partner Portal",
+    title_reports: "Reporting & Analytics",
+    title_alerts: "Auto Alerts",
+    applicant_name: "Applicant Name",
+    annual_income: "Annual Income",
+    category: "Category",
+    project_type: "Project Type",
+    project_cost: "Project Cost",
+    loan_req: "Loan Requirement",
+    app_mode: "Application Mode",
+    district: "District / Location",
+    purpose: "Purpose / Project Need",
+    btn_capture: "Capture Applicant Profile",
+    btn_clear: "Clear",
+    btn_continue_readiness: "Continue → Document Readiness",
+    btn_digilocker: "DigiLocker / Setu Sandbox",
+    btn_manual: "Manual Entry",
+    btn_save_manual: "Save Manual Verification",
+    btn_csc: "CSC Fallback",
+    btn_continue_match: "Continue → Match & Calculate",
+    btn_calc_emi: "Calculate Post-Moratorium EMI →",
+    btn_calculate_emi: "Calculate Post-Moratorium EMI",
+    btn_reset: "Reset",
+    btn_continue_routing: "Continue → CPRS Routing",
+    btn_route: "Route Application to Partner A",
+    btn_continue_market: "Continue → Market Saturation Signal",
+    btn_continue_track: "Continue → SLA Tracker",
+    btn_advance: "Advance Stage",
+    btn_breach: "Simulate SLA Breach",
+    btn_manual_update: "Manual Update",
+    btn_save_partner: "Save Partner Update",
+    btn_create_alert: "Create Auto Alert",
+    kpi_apps: "Applications",
+    kpi_nominated: "NOMINATED",
+    kpi_sanctioned: "SANCTIONED",
+    kpi_disbursed: "DISBURSED"
+  },
+  hi: {
+    login_tag: "साइन इन करने का तरीका चुनें",
+    customer_login: "ग्राहक लॉगिन",
+    admin_login: "एडमिन लॉगिन",
+    customer_desc: "आवेदक / नागरिक — NSFDC ऋण के लिए आवेदन करें, दस्तावेज़ तैयारी जाँचें और आवेदन ट्रैक करें।",
+    admin_desc: "CSC ऑपरेटर / चैनल पार्टनर / NSFDC एडमिन — आवेदन रूट करें, मूल्यांकन करें और प्रबंधित करें।",
+    mobile_label: "मोबाइल नंबर / आवेदक ID",
+    otp_label: "OTP",
+    email_label: "ईमेल ID (वैकल्पिक)",
+    email_label_req: "ईमेल ID",
+    emp_id_label: "कर्मचारी / पार्टनर ID",
+    password_label: "पासवर्ड",
+    login_btn_select: "जारी रखने के लिए लॉगिन प्रकार चुनें",
+    login_btn_customer: "ग्राहक के रूप में लॉगिन",
+    login_btn_admin: "एडमिन के रूप में लॉगिन",
+    demo_note: "SIH प्रोटोटाइप मोड — इस डेमो में कोई भी क्रेडेंशियल काम करता है।",
+    brand_sub: "NSFDC रियायती ऋण के लिए चैनल फाइनेंस और मार्केट-रेडीनेस OS",
+    nav_dashboard: "डैशबोर्ड",
+    nav_intake: "इनटेक",
+    nav_profile: "प्रोफ़ाइल",
+    nav_readiness: "दस्तावेज़ तैयारी",
+    nav_match: "मैच और गणना",
+    nav_emi: "पोस्ट-मोरटोरियम EMI",
+    nav_market: "बाज़ार संतृप्ति संकेत",
+    nav_tracking: "SLA ट्रैकर",
+    nav_routing: "CPRS रूटिंग",
+    nav_partner: "पार्टनर पोर्टल",
+    nav_reports: "रिपोर्टिंग",
+    nav_alerts: "ऑटो अलर्ट",
+    menu_overview: "अवलोकन",
+    menu_apply: "ऋण के लिए आवेदन",
+    menu_status: "आवेदन स्थिति",
+    menu_routing: "रूटिंग और चैनल पार्टनर",
+    btn_new_app: "+ नया आवेदन",
+    btn_partner_queue: "पार्टनर कतार",
+    btn_logout: "बाहर निकलें / लॉग आउट",
+    role_customer: "ग्राहक दृश्य",
+    role_admin: "एडमिन दृश्य",
+    btn_apply: "NSFDC ऋण के लिए आवेदन करें",
+    btn_track: "मेरा आवेदन ट्रैक करें",
+    btn_cprs: "CPRS रूटिंग खोलें",
+    hero_title: "योजना खोज से विश्वसनीय पार्टनर रूटिंग तक",
+    hero_desc: "SC आवेदकों और NSFDC चैनल पार्टनर्स के बीच दो-तरफा चैनल फाइनेंस ऑपरेटिंग सिस्टम — दस्तावेज़ तैयारी, स्मार्ट योजना सिफारिश, CPRS रूटिंग, बाज़ार संतृप्ति संकेत और SLA ट्रैकिंग के साथ।",
+    title_intake: "आवेदक इनटेक",
+    title_profile: "आवेदक प्रोफ़ाइल",
+    title_readiness: "दस्तावेज़ तैयारी",
+    title_match: "स्मार्ट योजना अनुशंसक",
+    title_emi: "पोस्ट-मोरटोरियम EMI",
+    title_routing: "CPRS रूटिंग",
+    title_market: "बाज़ार संतृप्ति संकेत",
+    title_tracking: "SLA ट्रैकर",
+    title_partner: "पार्टनर पोर्टल",
+    title_reports: "रिपोर्टिंग और विश्लेषण",
+    title_alerts: "ऑटो अलर्ट",
+    applicant_name: "आवेदक का नाम",
+    annual_income: "वार्षिक आय",
+    category: "श्रेणी",
+    project_type: "परियोजना प्रकार",
+    project_cost: "परियोजना लागत",
+    loan_req: "ऋण आवश्यकता",
+    app_mode: "आवेदन मोड",
+    district: "जिला / स्थान",
+    purpose: "उद्देश्य / परियोजना आवश्यकता",
+    btn_capture: "आवेदक प्रोफ़ाइल कैप्चर करें",
+    btn_clear: "साफ़ करें",
+    btn_continue_readiness: "जारी रखें → दस्तावेज़ तैयारी",
+    btn_digilocker: "DigiLocker / Setu सैंडबॉक्स",
+    btn_manual: "मैनुअल प्रविष्टि",
+    btn_save_manual: "मैनुअल सत्यापन सहेजें",
+    btn_csc: "CSC फॉलबैक",
+    btn_continue_match: "जारी रखें → मैच और गणना",
+    btn_calc_emi: "पोस्ट-मोरटोरियम EMI गणना करें →",
+    btn_calculate_emi: "पोस्ट-मोरटोरियम EMI गणना करें",
+    btn_reset: "रीसेट",
+    btn_continue_routing: "जारी रखें → CPRS रूटिंग",
+    btn_route: "आवेदन पार्टनर A को रूट करें",
+    btn_continue_market: "जारी रखें → बाज़ार संतृप्ति संकेत",
+    btn_continue_track: "जारी रखें → SLA ट्रैकर",
+    btn_advance: "स्टेज आगे बढ़ाएँ",
+    btn_breach: "SLA उल्लंघन सिमुलेट करें",
+    btn_manual_update: "मैनुअल अपडेट",
+    btn_save_partner: "पार्टनर अपडेट सहेजें",
+    btn_create_alert: "ऑटो अलर्ट बनाएँ",
+    kpi_apps: "आवेदन",
+    kpi_nominated: "नामांकित",
+    kpi_sanctioned: "स्वीकृत",
+    kpi_disbursed: "वितरित"
+  },
+  ta: {
+    login_tag: "உள்நுழையும் முறையைத் தேர்ந்தெடுக்கவும்",
+    customer_login: "வாடிக்கையாளர் உள்நுழைவு",
+    admin_login: "நிர்வாகி உள்நுழைவு",
+    customer_desc: "விண்ணப்பதாரர் / குடிமகன் — NSFDC கடன் விண்ணப்பிக்க, ஆவணத் தயார்நிலை சரிபார்க்க மற்றும் விண்ணப்பத்தைக் கண்காணிக்க.",
+    admin_desc: "CSC ஆபரேட்டர் / சேனல் பார்ட்னர் / NSFDC நிர்வாகி — விண்ணப்பங்களை வழிநடத்த, மதிப்பீடு செய்ய மற்றும் நிர்வகிக்க.",
+    mobile_label: "மொபைல் எண் / விண்ணப்பதாரர் ID",
+    otp_label: "OTP",
+    email_label: "மின்னஞ்சல் ID (விருப்பத்தேர்வு)",
+    email_label_req: "மின்னஞ்சல் ID",
+    emp_id_label: "பணியாளர் / பார்ட்னர் ID",
+    password_label: "கடவுச்சொல்",
+    login_btn_select: "தொடர உள்நுழைவு வகையைத் தேர்ந்தெடுக்கவும்",
+    login_btn_customer: "வாடிக்கையாளராக உள்நுழைக",
+    login_btn_admin: "நிர்வாகியாக உள்நுழைக",
+    demo_note: "SIH முன்மாதிரி முறை — இந்த டெமோவில் எந்த சான்றுகளும் வேலை செய்யும்.",
+    brand_sub: "NSFDC சலுகைக் கடனுக்கான சேனல் நிதி மற்றும் சந்தை-தயார்நிலை OS",
+    nav_dashboard: "டாஷ்போர்டு",
+    nav_intake: "உள்ளீடு",
+    nav_profile: "சுயவிவரம்",
+    nav_readiness: "ஆவணத் தயார்நிலை",
+    nav_match: "பொருத்தம் மற்றும் கணக்கீடு",
+    nav_emi: "மொரடோரியம் பிந்தைய EMI",
+    nav_market: "சந்தை நிறைவு சமிக்ஞை",
+    nav_tracking: "SLA கண்காணிப்பு",
+    nav_routing: "CPRS வழிநடத்தல்",
+    nav_partner: "பார்ட்னர் போர்டல்",
+    nav_reports: "அறிக்கைகள்",
+    nav_alerts: "தானியங்கி எச்சரிக்கைகள்",
+    menu_overview: "மேலோட்டம்",
+    menu_apply: "கடனுக்கு விண்ணப்பிக்க",
+    menu_status: "விண்ணப்ப நிலை",
+    menu_routing: "வழிநடத்தல் மற்றும் சேனல் பார்ட்னர்",
+    btn_new_app: "+ புதிய விண்ணப்பம்",
+    btn_partner_queue: "பார்ட்னர் வரிசை",
+    btn_logout: "வெளியேறு / உள்நுழைவு நீக்கு",
+    role_customer: "வாடிக்கையாளர் பார்வை",
+    role_admin: "நிர்வாகி பார்வை",
+    btn_apply: "NSFDC கடனுக்கு விண்ணப்பிக்க",
+    btn_track: "என் விண்ணப்பத்தைக் கண்காணி",
+    btn_cprs: "CPRS வழிநடத்தலைத் திற",
+    hero_title: "திட்டக் கண்டுபிடிப்பிலிருந்து நம்பகமான பார்ட்னர் வழிநடத்தல் வரை",
+    hero_desc: "SC விண்ணப்பதாரர்கள் மற்றும் NSFDC சேனல் பார்ட்னர்களுக்கு இடையே இருபக்க சேனல் நிதி இயக்க முறைமை — ஆவணத் தயார்நிலை, ஸ்மார்ட் திட்டப் பரிந்துரை, CPRS வழிநடத்தல், சந்தை நிறைவு சமிக்ஞை மற்றும் SLA கண்காணிப்புடன்.",
+    title_intake: "விண்ணப்பதாரர் உள்ளீடு",
+    title_profile: "விண்ணப்பதாரர் சுயவிவரம்",
+    title_readiness: "ஆவணத் தயார்நிலை",
+    title_match: "ஸ்மார்ட் திட்டப் பரிந்துரையாளர்",
+    title_emi: "மொரடோரியம் பிந்தைய EMI",
+    title_routing: "CPRS வழிநடத்தல்",
+    title_market: "சந்தை நிறைவு சமிக்ஞை",
+    title_tracking: "SLA கண்காணிப்பு",
+    title_partner: "பார்ட்னர் போர்டல்",
+    title_reports: "அறிக்கைகள் மற்றும் பகுப்பாய்வு",
+    title_alerts: "தானியங்கி எச்சரிக்கைகள்",
+    applicant_name: "விண்ணப்பதாரர் பெயர்",
+    annual_income: "ஆண்டு வருமானம்",
+    category: "வகை",
+    project_type: "திட்ட வகை",
+    project_cost: "திட்ட செலவு",
+    loan_req: "கடன் தேவை",
+    app_mode: "விண்ணப்ப முறை",
+    district: "மாவட்டம் / இடம்",
+    purpose: "நோக்கம் / திட்டத் தேவை",
+    btn_capture: "விண்ணப்பதாரர் சுயவிவரத்தைப் பதிவுசெய்",
+    btn_clear: "அழி",
+    btn_continue_readiness: "தொடர் → ஆவணத் தயார்நிலை",
+    btn_digilocker: "DigiLocker / Setu சாண்ட்பாக்ஸ்",
+    btn_manual: "கைமுறை உள்ளீடு",
+    btn_save_manual: "கைமுறை சரிபார்ப்பைச் சேமி",
+    btn_csc: "CSC மாற்று",
+    btn_continue_match: "தொடர் → பொருத்தம் மற்றும் கணக்கீடு",
+    btn_calc_emi: "மொரடோரியம் பிந்தைய EMI கணக்கிடு →",
+    btn_calculate_emi: "மொரடோரியம் பிந்தைய EMI கணக்கிடு",
+    btn_reset: "மீட்டமை",
+    btn_continue_routing: "தொடர் → CPRS வழிநடத்தல்",
+    btn_route: "விண்ணப்பத்தை பார்ட்னர் A-க்கு வழிநடத்து",
+    btn_continue_market: "தொடர் → சந்தை நிறைவு சமிக்ஞை",
+    btn_continue_track: "தொடர் → SLA கண்காணிப்பு",
+    btn_advance: "நிலையை முன்னேற்று",
+    btn_breach: "SLA மீறலை உருவகப்படுத்து",
+    btn_manual_update: "கைமுறை புதுப்பிப்பு",
+    btn_save_partner: "பார்ட்னர் புதுப்பிப்பைச் சேமி",
+    btn_create_alert: "தானியங்கி எச்சரிக்கை உருவாக்கு",
+    kpi_apps: "விண்ணப்பங்கள்",
+    kpi_nominated: "பரிந்துரைக்கப்பட்டது",
+    kpi_sanctioned: "அனுமதிக்கப்பட்டது",
+    kpi_disbursed: "வழங்கப்பட்டது"
+  },
+  ml: {
+    login_tag: "സൈൻ ഇൻ ചെയ്യാനുള്ള മാർഗം തിരഞ്ഞെടുക്കുക",
+    customer_login: "ഉപഭോക്തൃ ലോഗിൻ",
+    admin_login: "അഡ്മിൻ ലോഗിൻ",
+    customer_desc: "അപേക്ഷകൻ / പൗരൻ — NSFDC ക്രെഡിറ്റിന് അപേക്ഷിക്കുക, ഡോക്യുമെന്റ് റെഡിനസ് പരിശോധിക്കുക, അപേക്ഷ ട്രാക്ക് ചെയ്യുക.",
+    admin_desc: "CSC ഓപ്പറേറ്റർ / ചാനൽ പാർട്നർ / NSFDC അഡ്മിൻ — അപേക്ഷകൾ റൂട്ട് ചെയ്യുക, വിലയിരുത്തുക, നിയന്ത്രിക്കുക.",
+    mobile_label: "മൊബൈൽ നമ്പർ / അപേക്ഷകൻ ID",
+    otp_label: "OTP",
+    email_label: "ഇമെയിൽ ID (ഓപ്ഷണൽ)",
+    email_label_req: "ഇമെയിൽ ID",
+    emp_id_label: "ജീവനക്കാരൻ / പാർട്നർ ID",
+    password_label: "പാസ്‌വേഡ്",
+    login_btn_select: "തുടരാൻ ലോഗിൻ തരം തിരഞ്ഞെടുക്കുക",
+    login_btn_customer: "ഉപഭോക്താവായി ലോഗിൻ",
+    login_btn_admin: "അഡ്മിൻ ആയി ലോഗിൻ",
+    demo_note: "SIH പ്രോട്ടോടൈപ്പ് മോഡ് — ഈ ഡെമോയിൽ ഏത് ക്രെഡൻഷ്യലുകളും പ്രവർത്തിക്കും.",
+    brand_sub: "NSFDC ഇളവ് ക്രെഡിറ്റിനുള്ള ചാനൽ ഫിനാൻസ് & മാർക്കറ്റ്-റെഡിനസ് OS",
+    nav_dashboard: "ഡാഷ്ബോർഡ്",
+    nav_intake: "ഇൻടേക്ക്",
+    nav_profile: "പ്രൊഫൈൽ",
+    nav_readiness: "ഡോക്യുമെന്റ് റെഡിനസ്",
+    nav_match: "മാച്ച് & കാൽക്കുലേറ്റ്",
+    nav_emi: "പോസ്റ്റ്-മൊറട്ടോറിയം EMI",
+    nav_market: "മാർക്കറ്റ് സാച്ചുറേഷൻ സിഗ്നൽ",
+    nav_tracking: "SLA ട്രാക്കർ",
+    nav_routing: "CPRS റൂട്ടിംഗ്",
+    nav_partner: "പാർട്നർ പോർട്ടൽ",
+    nav_reports: "റിപ്പോർട്ടിംഗ്",
+    nav_alerts: "ഓട്ടോ അലർട്ടുകൾ",
+    menu_overview: "അവലോകനം",
+    menu_apply: "ക്രെഡിറ്റിന് അപേക്ഷിക്കുക",
+    menu_status: "അപേക്ഷാ സ്റ്റാറ്റസ്",
+    menu_routing: "റൂട്ടിംഗ് & ചാനൽ പാർട്നർ",
+    btn_new_app: "+ പുതിയ അപേക്ഷ",
+    btn_partner_queue: "പാർട്നർ ക്യൂ",
+    btn_logout: "പുറത്തുകടക്കുക / ലോഗ് ഔട്ട്",
+    role_customer: "ഉപഭോക്തൃ കാഴ്ച",
+    role_admin: "അഡ്മിൻ കാഴ്ച",
+    btn_apply: "NSFDC ക്രെഡിറ്റിന് അപേക്ഷിക്കുക",
+    btn_track: "എന്റെ അപേക്ഷ ട്രാക്ക് ചെയ്യുക",
+    btn_cprs: "CPRS റൂട്ടിംഗ് തുറക്കുക",
+    hero_title: "സ്കീം കണ്ടെത്തലിൽ നിന്ന് വിശ്വസനീയ പാർട്നർ റൂട്ടിംഗ് വരെ",
+    hero_desc: "SC അപേക്ഷകരും NSFDC ചാനൽ പാർട്നറുകളും തമ്മിലുള്ള രണ്ട്-വശ ചാനൽ ഫിനാൻസ് ഓപ്പറേറ്റിംഗ് സിസ്റ്റം — ഡോക്യുമെന്റ് റെഡിനസ്, സ്മാർട്ട് സ്കീം ശുപാർശ, CPRS റൂട്ടിംഗ്, മാർക്കറ്റ് സാച്ചുറേഷൻ സിഗ്നൽ, SLA ട്രാക്കിംഗ്.",
+    title_intake: "അപേക്ഷകൻ ഇൻടേക്ക്",
+    title_profile: "അപേക്ഷകൻ പ്രൊഫൈൽ",
+    title_readiness: "ഡോക്യുമെന്റ് റെഡിനസ്",
+    title_match: "സ്മാർട്ട് സ്കീം റിക്കമൻഡർ",
+    title_emi: "പോസ്റ്റ്-മൊറട്ടോറിയം EMI",
+    title_routing: "CPRS റൂട്ടിംഗ്",
+    title_market: "മാർക്കറ്റ് സാച്ചുറേഷൻ സിഗ്നൽ",
+    title_tracking: "SLA ട്രാക്കർ",
+    title_partner: "പാർട്നർ പോർട്ടൽ",
+    title_reports: "റിപ്പോർട്ടിംഗ് & അനലിറ്റിക്സ്",
+    title_alerts: "ഓട്ടോ അലർട്ടുകൾ",
+    applicant_name: "അപേക്ഷകന്റെ പേര്",
+    annual_income: "വാർഷിക വരുമാനം",
+    category: "വിഭാഗം",
+    project_type: "പ്രോജക്ട് തരം",
+    project_cost: "പ്രോജക്ട് ചെലവ്",
+    loan_req: "ലോൺ ആവശ്യം",
+    app_mode: "അപേക്ഷാ മോഡ്",
+    district: "ജില്ല / സ്ഥലം",
+    purpose: "ഉദ്ദേശ്യം / പ്രോജക്ട് ആവശ്യം",
+    btn_capture: "അപേക്ഷകൻ പ്രൊഫൈൽ ക്യാപ്ചർ ചെയ്യുക",
+    btn_clear: "മായ്ക്കുക",
+    btn_continue_readiness: "തുടരുക → ഡോക്യുമെന്റ് റെഡിനസ്",
+    btn_digilocker: "DigiLocker / Setu സാൻഡ്ബോക്സ്",
+    btn_manual: "മാനുവൽ എൻട്രി",
+    btn_save_manual: "മാനുവൽ വെരിഫിക്കേഷൻ സേവ് ചെയ്യുക",
+    btn_csc: "CSC ഫോൾബാക്ക്",
+    btn_continue_match: "തുടരുക → മാച്ച് & കാൽക്കുലേറ്റ്",
+    btn_calc_emi: "പോസ്റ്റ്-മൊറട്ടോറിയം EMI കണക്കാക്കുക →",
+    btn_calculate_emi: "പോസ്റ്റ്-മൊറട്ടോറിയം EMI കണക്കാക്കുക",
+    btn_reset: "റീസെറ്റ്",
+    btn_continue_routing: "തുടരുക → CPRS റൂട്ടിംഗ്",
+    btn_route: "അപേക്ഷ പാർട്നർ A-യിലേക്ക് റൂട്ട് ചെയ്യുക",
+    btn_continue_market: "തുടരുക → മാർക്കറ്റ് സാച്ചുറേഷൻ സിഗ്നൽ",
+    btn_continue_track: "തുടരുക → SLA ട്രാക്കർ",
+    btn_advance: "സ്റ്റേജ് മുന്നോട്ട്",
+    btn_breach: "SLA ബ്രീച്ച് സിമുലേറ്റ് ചെയ്യുക",
+    btn_manual_update: "മാനുവൽ അപ്ഡേറ്റ്",
+    btn_save_partner: "പാർട്നർ അപ്ഡേറ്റ് സേവ് ചെയ്യുക",
+    btn_create_alert: "ഓട്ടോ അലർട്ട് സൃഷ്ടിക്കുക",
+    kpi_apps: "അപേക്ഷകൾ",
+    kpi_nominated: "നോമിനേറ്റഡ്",
+    kpi_sanctioned: "സാങ്ക്ഷൻഡ്",
+    kpi_disbursed: "ഡിസ്ബേർസ്ഡ്"
+  }
+};
+
+let currentLang = 'en';
+
+function setLanguage(lang) {
+  if (!translations[lang]) return;
+  currentLang = lang;
+  document.documentElement.lang = lang === 'hi' ? 'hi' : (lang === 'ta' ? 'ta' : (lang === 'ml' ? 'ml' : 'en'));
+
+  // Update all elements with data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang][key]) {
+      el.textContent = translations[lang][key];
+    }
+  });
+
+  // Update login button text based on selected role
+  const loginBtn = document.getElementById('loginBtn');
+  if (loginBtn && selectedRole) {
+    loginBtn.textContent = selectedRole === 'customer'
+      ? translations[lang].login_btn_customer
+      : translations[lang].login_btn_admin;
+  } else if (loginBtn && !selectedRole) {
+    loginBtn.textContent = translations[lang].login_btn_select;
+  }
+
+  // Update lang buttons active state (both login and topbar)
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+  });
+
+  // Persist preference
+  try { localStorage.setItem('entreai_lang', lang); } catch(e) {}
+}
+
+// Restore language preference on load
+(function() {
+  try {
+    const saved = localStorage.getItem('entreai_lang');
+    if (saved && translations[saved]) currentLang = saved;
+  } catch(e) {}
+})();
+
+/* ========== END MULTILINGUAL ========== */
+
+
+let selectedRole=null;
+let currentRole=null;
+
+function selectRole(role,el){
+  selectedRole=role;
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('customerFields').style.display = role==='customer' ? 'grid' : 'none';
+  document.getElementById('adminFields').style.display = role==='admin' ? 'grid' : 'none';
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=false;
+  btn.innerText = role==='customer' ? translations[currentLang].login_btn_customer : translations[currentLang].login_btn_admin;
+  document.getElementById('loginMessage').innerHTML='';
+}
+
+function doLogin(){
+  if(!selectedRole){
+    document.getElementById('loginMessage').innerHTML=
+      '<div class="alert alert-warning">Please select Customer Login or Admin Login to continue.</div>';
+    return;
+  }
+  enterApp(selectedRole);
+}
+
+function enterApp(role){
+  currentRole=role;
+  document.body.className='role-'+role;
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appShell').classList.remove('hidden');
+  document.getElementById('roleBadge').innerText =
+    role==='customer' ? 'Applicant • Demo' : 'CSC Operator / Admin • Demo';
+  updateRoleSwitchUI();
+  showPage('dashboard', document.querySelector('.nav-item[onclick*="dashboard"]'));
+}
+
+function switchRole(role){
+  if(role===currentRole) return;
+  currentRole=role;
+  document.body.className='role-'+role;
+  document.getElementById('roleBadge').innerText =
+    role==='customer' ? 'Applicant • Demo' : 'CSC Operator / Admin • Demo';
+  updateRoleSwitchUI();
+  showPage('dashboard', document.querySelector('.nav-item[onclick*="dashboard"]'));
+}
+
+function updateRoleSwitchUI(){
+  document.querySelectorAll('.role-switch-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.role===currentRole);
+  });
+}
+
+function logout(){
+  currentRole=null;
+  selectedRole=null;
+  document.body.className='';
+  document.getElementById('appShell').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.role-switch-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('customerFields').style.display='none';
+  document.getElementById('adminFields').style.display='none';
+  const btn=document.getElementById('loginBtn');
+  btn.disabled=true;
+  btn.innerText=translations[currentLang].login_btn_select;
+  document.getElementById('loginMessage').innerHTML='';
+}
+
+const pageTitles={
+  dashboard:"EntreAI Dashboard",
+  intake:"Applicant Intake",
+  profile:"Applicant Profile",
+  readiness:"Document Readiness",
+  match:"Smart Scheme Recommender",
+  emi:"Post-Moratorium EMI",
+  routing:"CPRS Routing",
+  market:"Market Saturation Signal",
+  tracking:"SLA Tracker",
+  partner:"Partner Portal",
+  reports:"Reporting & Analytics",
+  alerts:"Auto Alerts"
+};
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const page=document.getElementById(id);
+  if(page) page.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+
+  document.getElementById('pageHeading').innerText=pageTitles[id] || 'EntreAI';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleManual(id){
+  document.getElementById(id).classList.toggle('show');
+}
+
+function saveManual(id){
+  document.getElementById(id).classList.remove('show');
+  alert('Manual entry saved successfully.');
+}
+
+function captureProfile(){
+  const name=document.getElementById('applicantName').value;
+  const income=document.getElementById('income').value;
+  const email=document.getElementById('applicantEmail') ? document.getElementById('applicantEmail').value : '';
+  document.getElementById('intakeMessage').innerHTML=
+    '<div class="alert alert-success"><b>Applicant Profile Captured:</b> '+name+
+    (email ? ' • Email: '+email : '')+
+    ' • Annual Income ₹'+Number(income).toLocaleString('en-IN')+
+    ' • Ready for Document Readiness.</div>';
+}
+
+function clearIntake(){
+  document.getElementById('applicantName').value='';
+  document.getElementById('income').value='';
+  document.getElementById('projectCost').value='';
+  document.getElementById('loanAmount').value='';
+  document.getElementById('intakeMessage').innerHTML=
+    '<div class="alert alert-info">Intake fields cleared. Manual entry is available.</div>';
+}
+
+function verifyDocuments(){
+  document.getElementById('drsScore').innerText='100%';
+  document.getElementById('documentMessage').innerHTML=
+    '<div class="alert alert-success"><b>DigiLocker / Setu Sandbox:</b> Identity, caste, income and bank-linkage consistency checks completed.</div>';
+}
+
+function manualDocumentEntry(){
+  document.getElementById('drsScore').innerText='95%';
+  document.getElementById('documentMessage').innerHTML=
+    '<div class="alert alert-warning"><b>Manual Entry Saved:</b> CSC-operator verification flag added to the application.</div>';
+  document.getElementById('documentManual').classList.remove('show');
+}
+
+function cscFallback(){
+  document.getElementById('documentMessage').innerHTML=
+    '<div class="alert alert-warning"><b>CSC Fallback Activated:</b> DigiLocker sandbox timeout → manual document entry with CSC-operator verification flag.</div>';
+}
+
+function calculateEMI(){
+  const P=parseFloat(document.getElementById('emiPrincipal').value)||0;
+  const annualRate=parseFloat(document.getElementById('emiRate').value)||0;
+  const moratorium=parseInt(document.getElementById('moratorium').value)||0;
+  const tenure=parseInt(document.getElementById('tenure').value)||0;
+
+  const monthlyRate=annualRate/12/100;
+  const newPrincipal=P+(P*monthlyRate*moratorium);
+  const remaining=tenure-moratorium;
+
+  let emi=0;
+  if(remaining>0 && monthlyRate>0){
+    emi=newPrincipal*monthlyRate*Math.pow(1+monthlyRate,remaining)/
+      (Math.pow(1+monthlyRate,remaining)-1);
+  }else if(remaining>0){
+    emi=newPrincipal/remaining;
+  }
+
+  document.getElementById('newPrincipal').innerText='₹'+Math.round(newPrincipal).toLocaleString('en-IN');
+  document.getElementById('monthlyEMI').innerText='₹'+Math.round(emi).toLocaleString('en-IN');
+  document.getElementById('displayMoratorium').innerText=moratorium+' Months';
+  document.getElementById('remainingTenure').innerText=Math.max(remaining,0)+' Months';
+}
+
+function resetEMI(){
+  document.getElementById('emiPrincipal').value=225000;
+  document.getElementById('emiRate').value=7;
+  document.getElementById('moratorium').value=6;
+  document.getElementById('tenure').value=48;
+  calculateEMI();
+}
+
+function routeApplication(){
+  document.getElementById('routingMessage').innerHTML=
+    '<div class="alert alert-success"><b>Application Routed:</b> ENT-1001 → Partner A (PSB). CPRS routing completed. Partner A selected after filtering overdue and quota-exhausted partners.</div>';
+}
+
+function advanceStage(){
+  document.getElementById('trackingMessage').innerHTML=
+    '<div class="alert alert-success"><b>SLA State Updated:</b> APPRAISAL → SANCTIONED. Demo state machine advanced successfully.</div>';
+}
+
+function triggerBreach(){
+  document.getElementById('trackingMessage').innerHTML=
+    '<div class="alert alert-danger"><b>SLA Breach Simulated:</b> Automated SMS / Email / Webhook alert triggered for applicant and district nodal contact.</div>';
+}
+
+function createAlert(){
+  const type=document.getElementById('alertType').value;
+  const app=document.getElementById('alertApp').value;
+  const msg=document.getElementById('alertText').value || 'Manual alert created for demonstration.';
+  document.getElementById('newAlert').innerHTML=
+    '<div class="alert alert-info"><b>'+type+'</b><br>'+app+' — '+msg+'</div>';
+}
+
+calculateEMI();
+setLanguage(currentLang);
+</script>
+
+</body>
+</html>
